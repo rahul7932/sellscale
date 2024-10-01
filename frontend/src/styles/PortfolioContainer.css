@@ -1,5 +1,13 @@
 .portfolio-container {
-    width: 80%;
-    height: 80%;
-    color: #fff;
+    width: 100%;
+    min-height: 90vh;
+    background-color: #111222;
+    border-radius: 20px;
+}
+
+.portfolio-list {
+    width: 30%;
+    min-height: 90vh;
+    background-color: #111;
+    border-radius: 20px;
 }

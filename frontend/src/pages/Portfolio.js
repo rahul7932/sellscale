@@ -4,7 +4,7 @@ import PortfolioContainer from '../components/PortfolioContainer';
 
 function Portfolio() {
     return (
-        <div className="portfolio">
+        <div>
             <h1 className='title'>My Portfolio</h1>
             <PortfolioContainer></PortfolioContainer>
         </div>
