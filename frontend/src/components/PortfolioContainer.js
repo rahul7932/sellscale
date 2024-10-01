@@ -4,9 +4,9 @@ import StockTile from './StockTile';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 
-function PortfolioContainer() {
+function PortfolioContainer( { stockInfo } ) {
     // Example fake data
-    const stocks = [
+    const stocks = [ 
         { ticker: "AAPL", num_shares: 10, price_bought: 150.50, date_bought: "2021-08-01" },
         { ticker: "MSFT", num_shares: 15, price_bought: 210.75, date_bought: "2021-08-02" },
         { ticker: "AMZN", num_shares: 5, price_bought: 3110.28, date_bought: "2021-08-03" },
@@ -55,6 +55,13 @@ function PortfolioContainer() {
                     <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
                 </LineChart>
                 <h1 className='header'>Metrics</h1>
+                <div class="stock-info-grid">
+                    {stockInfo.map((info, index) => (
+                        <div key={index} className="stock-info-item">
+                            <strong>{info.label}:</strong> {info.value}
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
