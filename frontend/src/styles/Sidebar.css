@@ -18,3 +18,8 @@
     padding-bottom: 10px; /* Vertical padding bottom */
     margin: 0; /* Ensure no extra horizontal space */
 }
+
+.sidebar-list a {
+    text-decoration: none;
+    color: #fff;
+}

@@ -1,14 +1,14 @@
 import React from 'react';
-import '../styles/Portfolio.css';
+import '../styles/Trade.css';
 import PortfolioContainer from '../components/PortfolioContainer';
 
-function Portfolio() {
+function Trade() {
     return (
         <div className="portfolio">
-            <h1 className='title'>My Portfolio</h1>
+            <h1 className='title'>Trade</h1>
             <PortfolioContainer></PortfolioContainer>
         </div>
     );
 }
 
-export default Portfolio;
+export default Trade;
