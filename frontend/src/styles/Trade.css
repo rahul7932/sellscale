@@ -4,7 +4,8 @@
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 20px;
-    background-color: #0c111e;;
+    background-color: #0c111e;
+    margin-bottom: 30px;
 }
 
 .select-search-bar {
@@ -13,4 +14,31 @@
 
 h2 {
     color: #fff;
+}
+
+
+.button-container {
+    display: flex;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+.button-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.stock-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 0px;
+
+}
+
+.stock-info-item {
+    padding: 8px;
 }

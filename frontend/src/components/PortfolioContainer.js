@@ -31,7 +31,7 @@ function PortfolioContainer( { stockInfo } ) {
 
     return (
         <div className="portfolio-container">
-            <div className="portfolio-list" style={{ overflowY: 'scroll', maxHeight: '400px' }}>  {/* Make this div scrollable */}
+            <div className="portfolio-list" style={{ overflowY: 'scroll', maxHeight: '200px' }}>  {/* Make this div scrollable */}
                 {stocks.map((stock, index) => (
                     <StockTile
                         key={index}
