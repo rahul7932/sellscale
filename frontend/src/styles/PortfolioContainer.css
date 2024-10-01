@@ -1,13 +1,33 @@
 .portfolio-container {
+    display: flex; /* Enable Flexbox */
+    justify-content: flex-start; /* Aligns children to the start */
+    align-items: stretch; /* Ensures that children stretch to fill the container height */
     width: 100%;
     min-height: 90vh;
     background-color: #0c111e;
     border-radius: 20px;
+    padding: 0; /* No padding to ensure elements fit snugly */
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
 }
 
 .portfolio-list {
-    width: 30%;
+    width: 30%; /* Takes up 30% of the container width */
     min-height: 90vh;
     background-color: #111;
-    border-radius: 20px;
+    border-radius: 20px 0 0 20px; /* Rounded corners on the left side only */
+    margin: 0; /* Ensures no margin is pushing the elements */
+    overflow-y: auto; /* Adds scrolling to this container */
+}
+
+.portfolio-stockview {
+    width: 70%; /* Takes up the remaining 70% of the container width */
+    min-height: 90vh;
+    background-color: #111;
+    border-radius: 0 20px 20px 0; /* Rounded corners on the right side only */
+    overflow-y: auto; /* Adds scrolling to this container */
+    padding: 20px;
+}
+
+.header {
+    color: #fff;
 }
