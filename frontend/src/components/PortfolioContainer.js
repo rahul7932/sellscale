@@ -44,7 +44,7 @@ function PortfolioContainer( { stockInfo } ) {
             </div>
             <div className="portfolio-stockview">
                 <h1 className='header'>Historical Performance</h1>
-                <LineChart width={800} height={500} data={data}
+                <LineChart width={900} height={500} data={data}
                     margin={{ top: 5, right: 30, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />

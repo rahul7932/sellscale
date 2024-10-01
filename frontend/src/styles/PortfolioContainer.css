@@ -38,6 +38,7 @@
     gap: 10px; /* Spacing between grid items */
     box-sizing: border-box; /* Includes padding and border in the element's total width and height */
     width: auto; /* Adjusts width to fit content */
+    margin-left: 0;
 }
 
 .stock-info-item {
@@ -46,7 +47,8 @@
     border: none; /* No borders for each grid item */
     text-align: left; /* Aligns text to the left */
     color: #fff;
-    font-size: 22px;
+    font-size: 20px;
+    margin-left: 0;
 }
 
 
