@@ -20,5 +20,7 @@ Open a new terminal at the root.
 
 `pip install -r requirements.txt`
 
+`python3 db/db_setup.py`
+
 `fastapi dev main.py`
 
