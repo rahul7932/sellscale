@@ -24,7 +24,12 @@ function BuyPopup({ onClose, onConfirm, currentPrice }) {
                     <input
                         type="number"
                         value={numShares}
-                        onChange={(e) => setNumShares(e.target.value)}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value >= 1 || value === "") {
+                                setNumShares(value);
+                            }
+                        }}
                         min="1"
                         className="popup-input"
                     />

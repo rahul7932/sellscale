@@ -3,7 +3,7 @@ import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import BuyPopup from '../components/BuyPopup';
 import SellPopup from '../components/SellPopup';
-import ConfirmationModal from '../components/ConfirmationModal';
+import ConfirmationBanner from '../components/ConfirmationBanner';
 import '../styles/Trade.css';
 
 function Trade() {
@@ -93,8 +93,9 @@ function Trade() {
 
     // Handle the confirmation of the Buy action
     const handleBuyConfirm = (numShares) => {
-        const date = new Date().toISOString();
-        const url = `http://127.0.0.1:8000/buy/${ticker}/${currentPrice}/${date}/${numShares}`;
+        const date = new Date();
+        const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}-${date.getFullYear()}`;
+        const url = `http://127.0.0.1:8000/buy/${ticker}/${currentPrice}/${formattedDate}/${numShares}`;
 
         // Send a POST request to the buy API endpoint
         axios.post(url)
@@ -107,20 +108,22 @@ function Trade() {
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
-                    // Handle known errors like insufficient funds
                     setBuyError('Insufficient funds for this order.');
                 } else {
-                    // Handle unexpected errors
                     setBuyError('An unexpected error occurred while trying to place the order.');
                 }
                 setShowBuyPopup(false);
+
+                // Clear the error after 3 seconds
+                setTimeout(() => setBuyError(''), 3000);
             });
     };
 
     // Handle the confirmation of the Sell action
     const handleSellConfirm = (numShares) => {
-        const date = new Date().toISOString();
-        const url = `http://127.0.0.1:8000/sell/${ticker}/${currentPrice}/${date}/${numShares}`;
+        const date = new Date();
+        const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}-${date.getFullYear()}`;
+        const url = `http://127.0.0.1:8000/sell/${ticker}/${currentPrice}/${formattedDate}/${numShares}`;
 
         // Send a POST request to the sell API endpoint
         axios.post(url)
@@ -138,6 +141,9 @@ function Trade() {
                     setSellError('An unexpected error occurred while trying to place the order.');
                 }
                 setShowSellPopup(false);
+
+                // Clear the error after 3 seconds
+                setTimeout(() => setSellError(''), 3000);
             });
     };
 
@@ -151,15 +157,25 @@ function Trade() {
     };
 
     // Helper function to format percentage gain/loss
-    const formatInsight = (value) => {
+    const formatInsight = (value, type) => {
         const isPositive = value > 0;
         const arrow = isPositive ? '▲' : '▼';
         const color = isPositive ? 'green' : 'red';
-        return (
-            <span style={{ color }}>
-                {arrow} {Math.abs(value).toFixed(2)}%
-            </span>
-        );
+        if (type === 'percent') {
+            return (
+                <span style={{ color }}>
+                    {arrow} {Math.abs(value).toFixed(2)}%
+                </span>
+            );
+        }
+       else {
+            return (
+                <span style={{ color }}>
+                    {arrow} ${Math.abs(value).toFixed(2)}
+                </span>
+            );
+        }
+        
     };
 
     // Fetch current balance on initial load
@@ -169,11 +185,11 @@ function Trade() {
 
     return (
         <div>
-            <h1 className='title'>Trade</h1>
+            <h1 className='main-title'>Trade</h1>
             <p className='balance'><strong>Current Balance: </strong>${currentBalance}</p>
 
             <div className='search-container'>
-                <h2>Search by Ticker</h2>
+                <h1 className="title">Search by Ticker</h1>
                 <form onSubmit={handleSearch} className="search-bar-form">
                     <input
                         type="text"
@@ -190,7 +206,7 @@ function Trade() {
                 {ticker && !error && (
                     <div className="selected-content">
                         {/* Key Insights Section */}
-                        <h2>Key Insights</h2>
+                        <h1 className="title">Key Insights</h1>
                         {loadingInsights ? (
                             <p>Loading key insights...</p>
                         ) : keyInsights ? (
@@ -200,18 +216,18 @@ function Trade() {
                                 </div>
                                 <div className="key-insight-item">
                                     <strong>Today's Dollar Gain: </strong>
-                                    {keyInsights.dollarGain ? formatInsight(keyInsights.dollarGain) : 'N/A'}
+                                    {keyInsights.dollarGain ? formatInsight(keyInsights.dollarGain, 'dollar') : 'N/A'}
                                 </div>
                                 <div className="key-insight-item">
                                     <strong>Today's Percentage Gain: </strong>
-                                    {keyInsights.percentageGain ? formatInsight(keyInsights.percentageGain) : 'N/A'}
+                                    {keyInsights.percentageGain ? formatInsight(keyInsights.percentageGain, 'percent') : 'N/A'}
                                 </div>
                             </div>
                         ) : (
                             <p>No key insights available.</p>
                         )}
 
-                         <h2>Actions</h2>
+                        <h1 className="title">Actions</h1>
                         <div className="button-container">
                             <button
                                 style={{
@@ -248,7 +264,7 @@ function Trade() {
                         </div>
 
                         {/* Historical Performance Section */}
-                        <h2>{ticker} Historical Performance</h2>
+                        <h1 className="title">{ticker} Historical Performance</h1>
                         {loadingHistory ? (
                             <p>Loading historical data...</p>
                         ) : (
@@ -266,7 +282,7 @@ function Trade() {
                         {/* Daily Metrics Section */}
                         {metrics && metrics.length > 0 && (
                             <>
-                                <h2>Daily Metrics</h2>
+                                <h1 className="title">Daily Metrics</h1>
                                 <div className="stock-info-grid">
                                     {metrics.map((metric, index) => (
                                         <div key={index} className="stock-info-item">
@@ -304,7 +320,7 @@ function Trade() {
 
             {/* Show the confirmation modal if the operation was successful */}
             {showConfirmation && (
-                <ConfirmationModal
+                <ConfirmationBanner
                     message={confirmationMessage}
                     onClose={() => setShowConfirmation(false)}
                 />

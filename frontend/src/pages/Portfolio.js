@@ -33,7 +33,7 @@ function Portfolio() {
 
     return (
         <div>
-            <h1 className='title'>My Portfolio</h1>
+            <h1 className='main-title'>My Portfolio</h1>
             <p className='subtitle'>
                 <strong>Current Balance: </strong>
                 {loading ? 'Loading...' : `$${balance}`}

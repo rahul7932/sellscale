@@ -1,0 +1,32 @@
+.confirmation-banner {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #39953c;
+    color: white;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    min-width: 50%;
+    height: 5%;
+    text-align: center;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    font-size: 32px;
+}
+
+.fade-in {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.fade-out {
+    opacity: 0;
+    transform: translate(-50%, -50%);
+}
+
+.banner-content {
+    font-size: 18px;
+    text-align: center;
+}

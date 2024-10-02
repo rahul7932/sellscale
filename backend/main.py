@@ -101,7 +101,7 @@ def get_stocks(db: sqlite3.Connection = Depends(create_connection)):
 def get_stock_history(ticker: str):
     """
     Endpoint to retrieve the 1-month historical stock data for a given ticker.
-    Returns a list of dates and closing prices.
+    Returns a list of dates and closing prices with two decimal places.
     """
     try:
         stock = yf.Ticker(ticker)
@@ -112,6 +112,10 @@ def get_stock_history(ticker: str):
 
         hist.reset_index(inplace=True)
         hist['Date'] = hist['Date'].dt.strftime('%Y-%m-%d')
+
+        # Format closing prices to always show two decimal places
+        hist['Close'] = hist['Close'].apply(lambda x: f"{x:.2f}")
+
         history = hist[['Date', 'Close']].to_dict(orient='records')
 
         return {'history': history}
@@ -150,7 +154,7 @@ def get_user_balance(db: sqlite3.Connection = Depends(create_connection)):
     """
     balance = get_first_user_balance(db)
     if balance is not None:
-        return {"balance": balance}
+        return {"balance":  f"{balance:.2f}"}
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
