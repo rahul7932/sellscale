@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import BuyPopup from '../components/BuyPopup';  // Import the new BuyPopup component
 import '../styles/Trade.css';
 
 function Trade() {
@@ -11,6 +12,9 @@ function Trade() {
     const [loadingHistory, setLoadingHistory] = useState(false);  // Loading state for history
     const [loadingMetrics, setLoadingMetrics] = useState(false);  // Loading state for metrics
     const [error, setError] = useState(null);  // Error state
+    const [showBuyPopup, setShowBuyPopup] = useState(false);  // State to toggle the popup
+    const [currentPrice, setCurrentPrice] = useState(0);  // Store current stock price
+    const [buyError, setBuyError] = useState('');  // State to handle buy errors
 
     // Handle the form submit (on pressing Enter or clicking Search)
     const handleSearch = (e) => {
@@ -44,11 +48,40 @@ function Trade() {
             .then(response => {
                 setMetrics(response.data);  // Set the stock metrics data
                 setLoadingMetrics(false);
+
+                // Set the current price from the fetched metrics
+                const currentPriceMetric = response.data.find(metric => metric.label === 'Previous Close');
+                if (currentPriceMetric) {
+                    setCurrentPrice(currentPriceMetric.value);
+                }
             })
             .catch(error => {
                 console.error('Error fetching stock metrics:', error);
                 setLoadingMetrics(false);
                 setError('Error fetching stock metrics. Please check the ticker symbol.');
+            });
+    };
+
+    // Handle the confirmation of the Buy action
+    const handleBuyConfirm = (numShares) => {
+        const date = new Date().toISOString();  // Get current date in ISO format
+        const url = `http://127.0.0.1:8000/buy/${ticker}/${currentPrice}/${date}/${numShares}`;
+
+        // Send a POST request to the buy API endpoint
+        axios.post(url)
+            .then(response => {
+                console.log(response.data.message);  // Log success message
+                setShowBuyPopup(false);  // Close the popup on success
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 400) {
+                    // Handle known errors like insufficient funds
+                    setBuyError('Insufficient funds for this order.');
+                } else {
+                    // Handle unexpected errors
+                    setBuyError('An unexpected error occurred while trying to place the order.');
+                }
+                setShowBuyPopup(false);  // Close the popup
             });
     };
 
@@ -92,7 +125,12 @@ function Trade() {
 
                         <h2>Actions</h2>
                         <div className="button-container">
-                            <button style={{ backgroundColor: 'green', color: 'white', fontSize: '28px' }}>Buy</button>
+                            <button
+                                style={{ backgroundColor: 'green', color: 'white', fontSize: '28px' }}
+                                onClick={() => setShowBuyPopup(true)}  // Show the buy popup when clicked
+                            >
+                                Buy
+                            </button>
                             <button style={{ backgroundColor: 'red', color: 'white', fontSize: '28px' }}>Sell</button>
                         </div>
 
@@ -113,6 +151,18 @@ function Trade() {
                     </div>
                 )}
             </div>
+
+            {/* Show the BuyPopup if showBuyPopup is true */}
+            {showBuyPopup && (
+                <BuyPopup
+                    onClose={() => setShowBuyPopup(false)}  // Close the popup
+                    onConfirm={handleBuyConfirm}  // Handle the confirm action
+                    currentPrice={currentPrice}  // Pass the current price to the popup
+                />
+            )}
+
+            {/* Show the buy error message if there is an error */}
+            {buyError && <div className="error-popup">{buyError}</div>}
         </div>
     );
 }

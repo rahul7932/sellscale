@@ -30,17 +30,6 @@ def startup_event():
         global_user_id = get_or_create_first_user(conn)['id']
         conn.close()
 
-@app.get('/get_stock_price/{ticker}')
-def get_stock_price(ticker: str):
-    stock = yf.Ticker(ticker)
-    hist = stock.history(period="1d")  # You can adjust the period as needed
-
-    if hist.empty:
-        raise HTTPException(status_code=404, detail="Stock data not found")
-
-    last_close = hist.iloc[-1]['Close']
-    return {"ticker": ticker, "last_close_price": last_close}
-
 @app.post("/buy/{ticker}/{price_bought_at}/{date_bought_at}/{quantity_bought}")
 def buy(
     ticker: str,
