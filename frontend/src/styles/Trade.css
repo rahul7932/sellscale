@@ -16,6 +16,11 @@ h2 {
     color: #fff;
 }
 
+.balance {
+    color: #fff;
+    font-size: 28px;
+}
+
 
 .button-container {
     display: flex;

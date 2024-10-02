@@ -1,66 +1,115 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/PortfolioContainer.css';
 import StockTile from './StockTile';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import axios from 'axios';
 
+function PortfolioContainer() {
+    const [stocks, setStocks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedTicker, setSelectedTicker] = useState(null);  // State for the selected stock ticker
+    const [metrics, setMetrics] = useState([]);  // State to store fetched metrics
+    const [history, setHistory] = useState([]);  // State to store fetched historical data
+    const [loadingMetrics, setLoadingMetrics] = useState(false);  // Track loading for metrics
+    const [loadingHistory, setLoadingHistory] = useState(false);  // Track loading for history
 
-function PortfolioContainer( { stockInfo } ) {
-    // Example fake data
-    const stocks = [ 
-        { ticker: "AAPL", num_shares: 10, price_bought: 150.50, date_bought: "2021-08-01" },
-        { ticker: "MSFT", num_shares: 15, price_bought: 210.75, date_bought: "2021-08-02" },
-        { ticker: "AMZN", num_shares: 5, price_bought: 3110.28, date_bought: "2021-08-03" },
-        { ticker: "AAPL", num_shares: 10, price_bought: 150.50, date_bought: "2021-08-01" },
-        { ticker: "MSFT", num_shares: 15, price_bought: 210.75, date_bought: "2021-08-02" },
-        { ticker: "AMZN", num_shares: 5, price_bought: 3110.28, date_bought: "2021-08-03" },
-        { ticker: "AAPL", num_shares: 10, price_bought: 150.50, date_bought: "2021-08-01" },
-        { ticker: "MSFT", num_shares: 15, price_bought: 210.75, date_bought: "2021-08-02" },
-        { ticker: "AMZN", num_shares: 5, price_bought: 3110.28, date_bought: "2021-08-03" },
-    ];
+    useEffect(() => {
+        // Fetch the stocks from the API endpoint
+        axios.get("http://127.0.0.1:8000/stocks")
+            .then(response => {
+                setStocks(response.data.stocks);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Error fetching stocks:", error);
+                setLoading(false);
+            });
+    }, []);
 
-    const data = [
-        { name: 'Page A', uv: 400, pv: 2400, amt: 2400 },
-        { name: 'Page B', uv: 300, pv: 1398, amt: 2210 },
-        { name: 'Page C', uv: 200, pv: 9800, amt: 2290 },
-        { name: 'Page D', uv: 278, pv: 3908, amt: 2000 },
-        { name: 'Page E', uv: 189, pv: 4800, amt: 2181 },
-        { name: 'Page F', uv: 239, pv: 3800, amt: 2500 },
-        { name: 'Page G', uv: 349, pv: 4300, amt: 2100 },
-        ];
+    // Fetch the stock metrics and history when the selected ticker changes
+    useEffect(() => {
+        if (selectedTicker) {
+            // Fetch metrics
+            setLoadingMetrics(true);  // Set loading for metrics
+            axios.get(`http://127.0.0.1:8000/stock_metrics/${selectedTicker}`)
+                .then(response => {
+                    setMetrics(response.data);  // Directly set the fetched metrics
+                    setLoadingMetrics(false);
+                })
+                .catch(error => {
+                    console.error("Error fetching stock metrics:", error);
+                    setLoadingMetrics(false);
+                });
 
+            // Fetch stock history
+            setLoadingHistory(true);  // Set loading for history
+            axios.get(`http://127.0.0.1:8000/stock_history/${selectedTicker}`)
+                .then(response => {
+                    setHistory(response.data.history);  // Set the fetched history data
+                    setLoadingHistory(false);
+                })
+                .catch(error => {
+                    console.error("Error fetching stock history:", error);
+                    setLoadingHistory(false);
+                });
+        }
+    }, [selectedTicker]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="portfolio-container">
-            <div className="portfolio-list" style={{ overflowY: 'scroll', maxHeight: '200px' }}>  {/* Make this div scrollable */}
-                {stocks.map((stock, index) => (
-                    <StockTile
-                        key={index}
-                        ticker={stock.ticker}
-                        num_shares={stock.num_shares}
-                        price_bought={stock.price_bought}
-                        date_bought={stock.date_bought}
-                    />
-                ))}
+            <div className="portfolio-list" style={{ overflowY: 'scroll', maxHeight: '200px' }}>
+                {stocks.length > 0 ? (
+                    stocks.map((stock, index) => (
+                        <StockTile
+                            key={index}
+                            ticker={stock.ticker}
+                            num_shares={stock.quantity_bought}
+                            price_bought={stock.price_bought_at}
+                            date_bought={stock.date_bought_at}
+                            onClick={() => setSelectedTicker(stock.ticker)}  // Handle the stock click
+                        />
+                    ))
+                ) : (
+                    <p>No stocks found for this user.</p>
+                )}
             </div>
             <div className="portfolio-stockview">
-                <h1 className='header'>Historical Performance</h1>
-                <LineChart width={900} height={500} data={data}
-                    margin={{ top: 5, right: 30, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="uv" stroke="#8884d8" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-                </LineChart>
-                <h1 className='header'>Metrics</h1>
-                <div class="stock-info-grid">
-                    {stockInfo.map((info, index) => (
-                        <div key={index} className="stock-info-item">
-                            <strong>{info.label}:</strong> {info.value}
-                        </div>
-                    ))}
+                <h1 className="header">Historical Performance</h1>
+                {loadingHistory ? (
+                    <p>Loading historical data...</p>
+                ) : (
+                    <LineChart
+                        width={900}
+                        height={500}
+                        data={history}  // Use fetched historical data
+                        margin={{ top: 5, right: 30, bottom: 5 }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="Date" label={{ value: 'Date (1mo span)', position: 'insideBottomRight', offset: -5 }} />  {/* Label for X-Axis */}
+                        <YAxis label={{ value: 'Closing Price ($)', angle: -90, position: 'insideLeft' }} />  {/* Label for Y-Axis */}
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="Close" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    </LineChart>
+                )}
+
+                <h1 className="header">Metrics</h1>
+                <div className="stock-info-grid">
+                    {loadingMetrics ? (
+                        <p>Loading metrics...</p>  // Show a loading message while fetching metrics
+                    ) : metrics.length > 0 ? (
+                        metrics.map((info, index) => (
+                            <div key={index} className="stock-info-item">
+                                <strong>{info.label}:</strong> {info.value}
+                            </div>
+                        ))
+                    ) : (
+                        <p>Select a stock to view its metrics.</p>
+                    )}
                 </div>
             </div>
         </div>

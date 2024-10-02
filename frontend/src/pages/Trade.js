@@ -26,6 +26,7 @@ function Trade() {
     return (
         <div>
             <h1 className='title'>Trade</h1>
+            <p className='balance'><strong>Current Balance: </strong>$100000</p>
             <div className='search-container'>
                 <h2>Search by Ticker</h2>
                 <Select
