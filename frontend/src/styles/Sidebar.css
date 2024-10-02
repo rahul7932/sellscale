@@ -23,4 +23,16 @@
 .sidebar-list a {
     text-decoration: none;
     color: #fff;
+    font-size: 28px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and text */
+}
+
+.favicon-icon {
+    width: 32px; /* Adjust the size of the icon */
+    height: 32px;
 }
