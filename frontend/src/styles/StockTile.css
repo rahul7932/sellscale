@@ -1,21 +1,20 @@
 .stocktile-container {
     color: #fff;
-    /* margin-left: 20px; */
-    border-bottom: 1px solid #666; /* Light grey border for contrast */
+    border-bottom: 1px solid #666;
     padding: 20px;
     transition: all 0.3s ease;
-    background-color: #141823; /* Dark background for each tile */
+    background-color: #141823;
 }
 
 .stocktile-container:last-child {
-    border-bottom: none; /* No border at the bottom for the last item */
+    border-bottom: none;
 }
 
 .stocktile-container:hover {
-    color: #000;  /* Change text color to black on hover */
-    margin-left: 30px;  /* Increase left margin on hover */
-    border-color: #fff;  /* Change border color to white on hover */
-    background-color: rgb(239, 239, 239);  /* Add a background color change on hover for better visibility */
+    color: #000;
+    margin-left: 30px;
+    border-color: #fff;
+    background-color: rgb(239, 239, 239);
     border-radius: 20px 0 0 20px ;
 }
 .stocktile-container:hover .ticker {

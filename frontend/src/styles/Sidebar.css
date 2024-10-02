@@ -15,9 +15,9 @@
 }
 
 .sidebar-list li {
-    padding-top: 10px; /* Vertical padding top */
-    padding-bottom: 10px; /* Vertical padding bottom */
-    margin: 0; /* Ensure no extra horizontal space */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0;
 }
 
 .sidebar-list a {

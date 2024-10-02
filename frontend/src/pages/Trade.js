@@ -7,45 +7,45 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import '../styles/Trade.css';
 
 function Trade() {
-    const [inputValue, setInputValue] = useState('');  // Store the input value from the search bar
-    const [ticker, setTicker] = useState('');  // Ticker to be used for fetching data
-    const [history, setHistory] = useState([]);  // Store stock history
-    const [metrics, setMetrics] = useState([]);  // Store stock metrics
-    const [keyInsights, setKeyInsights] = useState(null);  // Store key insights
-    const [loadingHistory, setLoadingHistory] = useState(false);  // Loading state for history
-    const [loadingMetrics, setLoadingMetrics] = useState(false);  // Loading state for metrics
-    const [loadingInsights, setLoadingInsights] = useState(false);  // Loading state for key insights
-    const [error, setError] = useState(null);  // Error state
-    const [currentPrice, setCurrentPrice] = useState(0);  // Store current stock price
-    const [currentBalance, setCurrentBalance] = useState(0);  // Store the current balance
-    const [showBuyPopup, setShowBuyPopup] = useState(false);  // State to toggle the buy popup
-    const [showSellPopup, setShowSellPopup] = useState(false);  // State to toggle the sell popup
-    const [buyError, setBuyError] = useState('');  // State to handle buy errors
-    const [sellError, setSellError] = useState('');  // State to handle sell errors
-    const [showConfirmation, setShowConfirmation] = useState(false);  // State to show confirmation modal
-    const [confirmationMessage, setConfirmationMessage] = useState('');  // Store confirmation message
+    const [inputValue, setInputValue] = useState('');
+    const [ticker, setTicker] = useState('');
+    const [history, setHistory] = useState([]);
+    const [metrics, setMetrics] = useState([]);
+    const [keyInsights, setKeyInsights] = useState(null);
+    const [loadingHistory, setLoadingHistory] = useState(false);
+    const [loadingMetrics, setLoadingMetrics] = useState(false);
+    const [loadingInsights, setLoadingInsights] = useState(false);
+    const [error, setError] = useState(null);
+    const [currentPrice, setCurrentPrice] = useState(0);
+    const [currentBalance, setCurrentBalance] = useState(0);
+    const [showBuyPopup, setShowBuyPopup] = useState(false);
+    const [showSellPopup, setShowSellPopup] = useState(false);
+    const [buyError, setBuyError] = useState('');
+    const [sellError, setSellError] = useState('');
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [confirmationMessage, setConfirmationMessage] = useState('');
 
     // Fetch current balance
     const fetchCurrentBalance = () => {
         axios.get('http://127.0.0.1:8000/user_balance')
             .then(response => {
-                setCurrentBalance(response.data.balance);  // Set the fetched balance
+                setCurrentBalance(response.data.balance);
             })
             .catch(error => {
                 console.error('Error fetching user balance:', error);
-                setCurrentBalance(0);  // Set balance to 0 on error
+                setCurrentBalance(0);
             });
     };
 
     // Fetch stock history and metrics from the backend
     const fetchStockData = (ticker) => {
-        setError(null);  // Reset error state
+        setError(null);
 
         // Fetch stock history
         setLoadingHistory(true);
         axios.get(`http://127.0.0.1:8000/stock_history/${ticker}`)
             .then(response => {
-                setHistory(response.data.history);  // Set the stock history data
+                setHistory(response.data.history);
                 setLoadingHistory(false);
             })
             .catch(error => {
@@ -58,7 +58,7 @@ function Trade() {
         setLoadingMetrics(true);
         axios.get(`http://127.0.0.1:8000/stock_metrics/${ticker}`)
             .then(response => {
-                setMetrics(response.data);  // Set the stock metrics data
+                setMetrics(response.data);
                 setLoadingMetrics(false);
 
                 // Set the current price from the fetched metrics
@@ -82,7 +82,7 @@ function Trade() {
         setLoadingInsights(true);
         axios.get(`http://127.0.0.1:8000/key_insights/${ticker}`)
             .then(response => {
-                setKeyInsights(response.data);  // Set the fetched key insights
+                setKeyInsights(response.data);
                 setLoadingInsights(false);
             })
             .catch(error => {
@@ -93,17 +93,17 @@ function Trade() {
 
     // Handle the confirmation of the Buy action
     const handleBuyConfirm = (numShares) => {
-        const date = new Date().toISOString();  // Get current date in ISO format
+        const date = new Date().toISOString();
         const url = `http://127.0.0.1:8000/buy/${ticker}/${currentPrice}/${date}/${numShares}`;
 
         // Send a POST request to the buy API endpoint
         axios.post(url)
             .then(response => {
-                console.log(response.data.message);  // Log success message
-                setShowBuyPopup(false);  // Close the popup on success
+                console.log(response.data.message);
+                setShowBuyPopup(false);
                 setConfirmationMessage('Stock purchased successfully!');
-                setShowConfirmation(true);  // Show confirmation modal
-                fetchCurrentBalance();  // Refresh the balance after the purchase
+                setShowConfirmation(true);
+                fetchCurrentBalance();
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
@@ -113,42 +113,40 @@ function Trade() {
                     // Handle unexpected errors
                     setBuyError('An unexpected error occurred while trying to place the order.');
                 }
-                setShowBuyPopup(false);  // Close the popup
+                setShowBuyPopup(false);
             });
     };
 
     // Handle the confirmation of the Sell action
     const handleSellConfirm = (numShares) => {
-        const date = new Date().toISOString();  // Get current date in ISO format
+        const date = new Date().toISOString();
         const url = `http://127.0.0.1:8000/sell/${ticker}/${currentPrice}/${date}/${numShares}`;
 
         // Send a POST request to the sell API endpoint
         axios.post(url)
             .then(response => {
-                console.log(response.data.message);  // Log success message
-                setShowSellPopup(false);  // Close the popup on success
+                console.log(response.data.message);
+                setShowSellPopup(false);
                 setConfirmationMessage('Stock sold successfully!');
-                setShowConfirmation(true);  // Show confirmation modal
-                fetchCurrentBalance();  // Refresh the balance after the sale
+                setShowConfirmation(true);
+                fetchCurrentBalance();
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
-                    // Handle known errors like insufficient stock quantity
                     setSellError('Insufficient stock quantity for this order.');
                 } else {
-                    // Handle unexpected errors
                     setSellError('An unexpected error occurred while trying to place the order.');
                 }
-                setShowSellPopup(false);  // Close the popup
+                setShowSellPopup(false);
             });
     };
 
     // Handle the form submit (on pressing Enter or clicking Search)
     const handleSearch = (e) => {
-        e.preventDefault();  // Prevent form submission
+        e.preventDefault();
         if (inputValue) {
-            setTicker(inputValue);  // Update ticker only when form is submitted
-            fetchStockData(inputValue);  // Fetch the stock data based on the input value
+            setTicker(inputValue);
+            fetchStockData(inputValue);
         }
     };
 
@@ -166,7 +164,7 @@ function Trade() {
 
     // Fetch current balance on initial load
     useEffect(() => {
-        fetchCurrentBalance();  // Fetch current balance when the component mounts
+        fetchCurrentBalance();
     }, []);
 
     return (
@@ -181,7 +179,7 @@ function Trade() {
                         type="text"
                         placeholder="Enter ticker symbol (e.g., AAPL)"
                         value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value.toUpperCase())}  // Update inputValue while typing
+                        onChange={(e) => setInputValue(e.target.value.toUpperCase())}
                         className="search-bar-input"
                     />
                     <button type="submit" className="search-bar-button">Search</button>
@@ -225,9 +223,9 @@ function Trade() {
                                     cursor: 'pointer',
                                     transition: 'background-color 0.3s ease',
                                 }}
-                                onClick={() => setShowBuyPopup(true)}  // Show the buy popup when clicked
-                                onMouseEnter={(e) => e.target.style.backgroundColor = '#45a049'}  // Darker green on hover
-                                onMouseLeave={(e) => e.target.style.backgroundColor = '#4caf50'}  // Original color on leave
+                                onClick={() => setShowBuyPopup(true)}
+                                onMouseEnter={(e) => e.target.style.backgroundColor = '#45a049'}
+                                onMouseLeave={(e) => e.target.style.backgroundColor = '#4caf50'}
                             >
                                 Buy
                             </button>
@@ -241,9 +239,9 @@ function Trade() {
                                     cursor: 'pointer',
                                     transition: 'background-color 0.3s ease',
                                 }}
-                                onClick={() => setShowSellPopup(true)}  // Show the sell popup when clicked
-                                onMouseEnter={(e) => e.target.style.backgroundColor = '#d32f2f'}  // Darker red on hover
-                                onMouseLeave={(e) => e.target.style.backgroundColor = '#f44336'}  // Original color on leave
+                                onClick={() => setShowSellPopup(true)}
+                                onMouseEnter={(e) => e.target.style.backgroundColor = '#d32f2f'}
+                                onMouseLeave={(e) => e.target.style.backgroundColor = '#f44336'}
                             >
                                 Sell
                             </button>
@@ -285,18 +283,18 @@ function Trade() {
             {/* Show the BuyPopup if showBuyPopup is true */}
             {showBuyPopup && (
                 <BuyPopup
-                    onClose={() => setShowBuyPopup(false)}  // Close the popup
-                    onConfirm={handleBuyConfirm}  // Handle the confirm action
-                    currentPrice={currentPrice}  // Pass the current price to the popup
+                    onClose={() => setShowBuyPopup(false)}
+                    onConfirm={handleBuyConfirm}
+                    currentPrice={currentPrice}
                 />
             )}
 
             {/* Show the SellPopup if showSellPopup is true */}
             {showSellPopup && (
                 <SellPopup
-                    onClose={() => setShowSellPopup(false)}  // Close the popup
-                    onConfirm={handleSellConfirm}  // Handle the confirm action
-                    currentPrice={currentPrice}  // Pass the current price to the popup
+                    onClose={() => setShowSellPopup(false)}
+                    onConfirm={handleSellConfirm}
+                    currentPrice={currentPrice}
                 />
             )}
 
@@ -308,7 +306,7 @@ function Trade() {
             {showConfirmation && (
                 <ConfirmationModal
                     message={confirmationMessage}
-                    onClose={() => setShowConfirmation(false)}  // Close the modal automatically
+                    onClose={() => setShowConfirmation(false)}
                 />
             )}
         </div>

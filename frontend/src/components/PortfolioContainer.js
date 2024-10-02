@@ -106,6 +106,18 @@ function PortfolioContainer() {
         );
     };
 
+    // Helper function to style positive/negative insights for percentage and dollar gain
+    const formatDollarGain = (value) => {
+        const isPositive = value > 0;
+        const arrow = isPositive ? '▲' : '▼';
+        const color = isPositive ? 'green' : 'red';
+        return (
+            <span style={{ color }}>
+                {arrow} ${Math.abs(value).toFixed(2)}
+            </span>
+        );
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -113,21 +125,9 @@ function PortfolioContainer() {
     // Find the selected stock's details
     const selectedStock = stocks.find(stock => stock.ticker === selectedTicker);
 
-    // Helper function to style positive/negative insights for percentage and dollar gain
-const formatDollarGain = (value) => {
-    const isPositive = value > 0;
-    const arrow = isPositive ? '▲' : '▼';
-    const color = isPositive ? 'green' : 'red';
-    return (
-        <span style={{ color }}>
-            {arrow} ${Math.abs(value).toFixed(2)}
-        </span>
-    );
-};
-
-// JSX for rendering the Portfolio Container
 return (
     <div className="portfolio-container">
+        {/* Portfolio List */}
         <div className="portfolio-list" style={{ overflowY: 'scroll', maxHeight: '200px' }}>
             {stocks.length > 0 ? (
                 stocks.map((stock, index) => (
@@ -137,7 +137,7 @@ return (
                         num_shares={stock.quantity_bought}
                         price_bought={stock.price_bought_at}
                         date_bought={stock.date_bought_at}
-                        onClick={() => setSelectedTicker(stock.ticker)}  // Handle the stock click
+                        onClick={() => setSelectedTicker(stock.ticker)}
                     />
                 ))
             ) : (
@@ -147,15 +147,17 @@ return (
 
         {/* Stock view containing both Key Insights and Historical Performance */}
         <div className="portfolio-stockview">
+
             {/* Key Insights Section */}
             <div className="key-insights">
                 <h1 className="header">Key Information - {selectedTicker}</h1>
                 {loadingInsights ? (
                     <p>Loading key insights...</p>
                 ) : keyInsights ? (
-                    <div className="key-insights-grid">
+                    <div className="key-insights-grid-portfolio">
                         <div className="key-insight-item">
-                            <strong>Today's Price: </strong> ${keyInsights.currentPrice ? keyInsights.currentPrice.toFixed(2) : 'N/A'}
+                                <strong>Today's Price: </strong> ${keyInsights.currentPrice ?
+                                    keyInsights.currentPrice.toFixed(2) : 'N/A'}
                         </div>
                         <div className="key-insight-item">
                             <strong>Today's Dollar Gain: </strong>
@@ -207,7 +209,7 @@ return (
             <h1 className="header">Daily Metrics</h1>
             <div className="stock-info-grid">
                 {loadingMetrics ? (
-                    <p>Loading metrics...</p>  // Show a loading message while fetching metrics
+                    <p>Loading metrics...</p>
                 ) : metrics.length > 0 ? (
                     metrics.map((info, index) => (
                         <div key={index} className="stock-info-item">

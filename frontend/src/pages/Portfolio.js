@@ -11,34 +11,32 @@ function Portfolio() {
     const fetchBalance = () => {
         axios.get("http://127.0.0.1:8000/user_balance")
             .then(response => {
-                setBalance(response.data.balance);  // Set the fetched balance
-                setLoading(false);  // Turn off loading
+                setBalance(response.data.balance);
+                setLoading(false);
             })
             .catch(error => {
                 console.error("Error fetching balance:", error);
-                setLoading(false);  // Turn off loading even if there's an error
+                setLoading(false);
             });
     };
 
     // Fetch the balance initially and set up a timer to update it every 5 seconds
     useEffect(() => {
-        fetchBalance();  // Fetch the balance when the component mounts
+        fetchBalance();
 
         const intervalId = setInterval(() => {
-            fetchBalance();  // Fetch the balance every 5 seconds
+            fetchBalance();
         }, 5000);
 
-        // Clear the interval when the component is unmounted to avoid memory leaks
         return () => clearInterval(intervalId);
-    }, []);  // Empty dependency array ensures this runs only once on mount
+    }, []);
 
     return (
         <div>
             <h1 className='title'>My Portfolio</h1>
-            {/* Display loading or the balance */}
             <p className='subtitle'>
                 <strong>Current Balance: </strong>
-                {loading ? 'Loading...' : `$${balance}`}  {/* Show the balance or loading message */}
+                {loading ? 'Loading...' : `$${balance}`}
             </p>
             <PortfolioContainer></PortfolioContainer>
         </div>
