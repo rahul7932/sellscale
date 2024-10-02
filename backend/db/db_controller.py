@@ -190,3 +190,17 @@ def get_user_stocks(conn, owner_id):
     except Exception as e:
         raise e
 
+def get_first_user_balance(conn):
+    """ Get the balance of the first user in the user_data table """
+    try:
+        c = conn.cursor()
+        c.execute("SELECT balance FROM user_data ORDER BY id LIMIT 1")
+        result = c.fetchone()
+        if result:
+            return result[0]  # Return the balance
+        else:
+            return None  # No user found
+    except Error as e:
+        print(e)
+        return None
+

@@ -1,29 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Portfolio.css';
 import PortfolioContainer from '../components/PortfolioContainer';
+import axios from 'axios';
 
 function Portfolio() {
+    const [balance, setBalance] = useState(null);  // State to store the balance
+    const [loading, setLoading] = useState(true);  // State to track loading
 
-    // In your parent component or data file
-const stockMetrics = [
-    { label: 'Previous Close', value: '419.74' },
-    { label: 'Open', value: '413.20' },
-    { label: 'Bid', value: '416.31 x 200' },
-    { label: 'Ask', value: '417.36 x 200' },
-    { label: 'Day\'s Range', value: '412.46 - 437.98' },
-    { label: '52 Week Range', value: '22.66 - 437.98' },
-    { label: 'Volume', value: '6,734,018' },
-    { label: 'Avg. Volume', value: '77,863,452' },
-    { label: 'Market Cap (Intraday)', value: '243.829B' }
-];
+    // Function to fetch balance
+    const fetchBalance = () => {
+        axios.get("http://127.0.0.1:8000/user_balance")
+            .then(response => {
+                setBalance(response.data.balance);  // Set the fetched balance
+                setLoading(false);  // Turn off loading
+            })
+            .catch(error => {
+                console.error("Error fetching balance:", error);
+                setLoading(false);  // Turn off loading even if there's an error
+            });
+    };
 
-// When rendering the PortfolioContainer component
-<PortfolioContainer stockInfo={stockMetrics} />
+    // Fetch the balance initially and set up a timer to update it every 5 seconds
+    useEffect(() => {
+        fetchBalance();  // Fetch the balance when the component mounts
+
+        const intervalId = setInterval(() => {
+            fetchBalance();  // Fetch the balance every 5 seconds
+        }, 5000);
+
+        // Clear the interval when the component is unmounted to avoid memory leaks
+        return () => clearInterval(intervalId);
+    }, []);  // Empty dependency array ensures this runs only once on mount
 
     return (
         <div>
             <h1 className='title'>My Portfolio</h1>
-            <PortfolioContainer stockInfo={stockMetrics}></PortfolioContainer>
+            {/* Display loading or the balance */}
+            <h2 className='subtitle'>
+                <strong>Current Balance: </strong>
+                {loading ? 'Loading...' : `$${balance}`}  {/* Show the balance or loading message */}
+            </h2>
+            <PortfolioContainer></PortfolioContainer>
         </div>
     );
 }

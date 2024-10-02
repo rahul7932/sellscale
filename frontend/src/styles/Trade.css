@@ -47,3 +47,65 @@ h2 {
 .stock-info-item {
     padding: 8px;
 }
+
+.search-bar-form {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 20px;
+}
+
+.search-bar-input {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-bar-input:focus {
+    border-color: #8884d8;
+    box-shadow: 0 0 8px rgba(136, 132, 216, 0.6);
+}
+
+.search-bar-button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    font-size: 16px;
+    background-color: #8884d8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar-button:hover {
+    background-color: #6664b0;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.selected-content {
+    margin-top: 30px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.stock-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(3, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}

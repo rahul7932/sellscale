@@ -52,4 +52,24 @@
     margin-left: 0;
 }
 
+.key-insights {
+    margin: 20px 0;
+}
+
+.key-insights-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates two columns */
+    grid-template-rows: repeat(3, auto); /* Creates three rows */
+    gap: 15px;
+}
+
+.key-insight-item {
+    font-size: 20px;
+    text-align: left;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+
 

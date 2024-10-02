@@ -4,6 +4,7 @@ import yfinance as yf
 from .db.db_controller import (
     create_connection,
     buy_stock,
+    get_first_user_balance,
     sell_stock,
     get_or_create_first_user,
     get_user_stocks
@@ -157,4 +158,50 @@ def get_sp500_history():
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching S&P 500 history: {str(e)}")
+    
+@app.get("/user_balance")
+def get_user_balance(db: sqlite3.Connection = Depends(create_connection)):
+    """Endpoint to get the balance of the first user"""
+    balance = get_first_user_balance(db)
+    if balance is not None:
+        return {"balance": balance}
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+@app.get("/key_insights/{ticker}")
+def get_key_insights(ticker: str):
+    """
+    Endpoint to get key insights for a specific stock.
+    Returns today's price, today's gain (dollars and percent).
+    """
+    try:
+        # Fetch the stock data from Yahoo Finance
+        stock = yf.Ticker(ticker)
+        stock_info = stock.info
+
+        # Fetch today's price (current price) and previous close price
+        todays_data = stock.history(period='1d')
+        current_price = todays_data['Close'][0]
+        previous_close = stock_info.get('previousClose', None)
+
+        if current_price is None or previous_close is None:
+            raise HTTPException(status_code=404, detail=f"Unable to fetch current price or previous close{current_price, previous_close}")
+
+        # Calculate today's dollar gain
+        dollar_gain = current_price - previous_close
+
+        # Calculate today's percentage gain
+        percentage_gain = (dollar_gain / previous_close) * 100 if previous_close != 0 else 0
+
+        # Prepare the key insights data
+        key_insights = {
+            'currentPrice': current_price,
+            'dollarGain': dollar_gain,
+            'percentageGain': percentage_gain
+        }
+
+        return key_insights
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching key insights: {str(e)}")
+
 
