@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/BuyPopup.css';  // Assuming you have some CSS for the popup
+import '../styles/BuyPopup.css';  // Reuse the same CSS
 
-function BuyPopup({ onClose, onConfirm, currentPrice }) {
+function SellPopup({ onClose, onConfirm, currentPrice }) {
     const [numShares, setNumShares] = useState(0);  // State for number of shares
     const [totalOrderVolume, setTotalOrderVolume] = useState(0);  // State for total order volume
 
@@ -18,7 +18,7 @@ function BuyPopup({ onClose, onConfirm, currentPrice }) {
     return (
         <div className="popup-overlay">
             <div className="popup-content">
-                <h2>Buy Stock</h2>
+                <h2>Sell Stock</h2>
                 <div className="input-group">
                     <label>Number of Shares: </label>
                     <input
@@ -43,4 +43,4 @@ function BuyPopup({ onClose, onConfirm, currentPrice }) {
     );
 }
 
-export default BuyPopup;
+export default SellPopup;

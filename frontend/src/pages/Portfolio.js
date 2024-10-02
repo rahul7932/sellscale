@@ -36,10 +36,10 @@ function Portfolio() {
         <div>
             <h1 className='title'>My Portfolio</h1>
             {/* Display loading or the balance */}
-            <h2 className='subtitle'>
+            <p className='subtitle'>
                 <strong>Current Balance: </strong>
                 {loading ? 'Loading...' : `$${balance}`}  {/* Show the balance or loading message */}
-            </h2>
+            </p>
             <PortfolioContainer></PortfolioContainer>
         </div>
     );

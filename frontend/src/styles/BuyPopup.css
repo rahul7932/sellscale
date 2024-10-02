@@ -11,31 +11,71 @@
 }
 
 .popup-content {
-    background: white;
+    background: #1c2230; /* Dark background */
     padding: 20px;
     border-radius: 10px;
     width: 400px;
     text-align: center;
+    color: white; /* White text for contrast */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
 }
 
 .popup-input {
-    width: 100px;
-    margin-top: 10px;
+    width: 120px;
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.popup-input:focus {
+    border-color: #8884d8;
+    box-shadow: 0 0 8px rgba(136, 132, 216, 0.6);
 }
 
 .popup-buttons {
-    margin-top: 20px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cancel-button, .confirm-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    width: 45%;  /* Ensure the buttons have equal width */
 }
 
 .cancel-button {
-    background-color: red;
+    background-color: #e74c3c;
     color: white;
-    margin-right: 10px;
-    padding: 10px 20px;
+}
+
+.cancel-button:hover {
+    background-color: #c0392b;  /* Darker red on hover */
+    box-shadow: 0px 4px 8px rgba(231, 76, 60, 0.6);
+}
+
+.cancel-button:active {
+    background-color: #a93226;  /* Even darker red on click */
 }
 
 .confirm-button {
-    background-color: green;
+    background-color: #27ae60;
     color: white;
-    padding: 10px 20px;
+}
+
+.confirm-button:hover {
+    background-color: #229954;  /* Darker green on hover */
+    box-shadow: 0px 4px 8px rgba(39, 174, 96, 0.6);
+}
+
+.confirm-button:active {
+    background-color: #1e8449;  /* Even darker green on click */
 }
