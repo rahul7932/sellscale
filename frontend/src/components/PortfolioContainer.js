@@ -20,6 +20,7 @@ function PortfolioContainer() {
     const isInitialLoad = useRef(true);
 
     const fetchStocks = () => {
+        setLoading(true);
         axios.get("http://127.0.0.1:8000/stocks")
             .then(response => {
                 setStocks(response.data.stocks);
@@ -81,27 +82,6 @@ function PortfolioContainer() {
         }
     }, [selectedTicker]);
 
-    const formatInsight = (value) => {
-        const isPositive = value > 0;
-        const arrow = isPositive ? '▲' : '▼';
-        const color = isPositive ? 'green' : 'red';
-        return (
-            <span style={{ color }}>
-                {arrow} {Math.abs(value).toFixed(2)}%
-            </span>
-        );
-    };
-
-    const formatDollarGain = (value) => {
-        const isPositive = value > 0;
-        const arrow = isPositive ? '▲' : '▼';
-        const color = isPositive ? 'green' : 'red';
-        return (
-            <span style={{ color }}>
-                {arrow} ${Math.abs(value).toFixed(2)}
-            </span>
-        );
-    };
 
     if (loading) return <div>Loading...</div>;
     const selectedStock = stocks.find(stock => stock.ticker === selectedTicker);
@@ -115,8 +95,6 @@ function PortfolioContainer() {
                     loadingInsights={loadingInsights}
                     keyInsights={keyInsights}
                     selectedStock={selectedStock}
-                    formatDollarGain={formatDollarGain}
-                    formatInsight={formatInsight}
                 />
                 <h1 className="header">{selectedTicker} Historical Performance </h1>
                 <StockChart loadingHistory={loadingHistory} history={history} />
