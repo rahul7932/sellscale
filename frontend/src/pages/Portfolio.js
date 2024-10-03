@@ -4,8 +4,8 @@ import PortfolioContainer from '../components/PortfolioContainer';
 import axios from 'axios';
 
 function Portfolio() {
-    const [balance, setBalance] = useState(null);  // State to store the balance
-    const [loading, setLoading] = useState(true);  // State to track loading
+    const [balance, setBalance] = useState('');
+    const [loading, setLoading] = useState(true);
 
     // Function to fetch balance
     const fetchBalance = () => {

@@ -20,7 +20,6 @@ function PortfolioContainer() {
     const isInitialLoad = useRef(true);
 
     const fetchStocks = () => {
-        setLoading(true);
         axios.get("http://127.0.0.1:8000/stocks")
             .then(response => {
                 setStocks(response.data.stocks);
@@ -81,7 +80,6 @@ function PortfolioContainer() {
                 });
         }
     }, [selectedTicker]);
-
 
     if (loading) return <div>Loading...</div>;
     const selectedStock = stocks.find(stock => stock.ticker === selectedTicker);
